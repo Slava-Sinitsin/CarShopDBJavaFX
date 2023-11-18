@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/car_shop</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
+        <property name="connection.username">car_shop_admin</property>
+        <property name="connection.password">1436</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="show_sql">true</property>
+        <mapping class="org.example.mappers.Car"/>
+        <mapping class="org.example.mappers.CertifyingDocument"/>
+        <mapping class="org.example.mappers.ClientBuyer"/>
+        <mapping class="org.example.mappers.ClientSeller"/>
+        <mapping class="org.example.mappers.Employee"/>
+        <mapping class="org.example.mappers.Part"/>
+        <mapping class="org.example.mappers.Passport"/>
+        <mapping class="org.example.mappers.TransferInfo"/>
+        <mapping class="org.example.mappers.UsedInfo"/>
+    </session-factory>
+</hibernate-configuration>
