@@ -374,7 +374,7 @@ public class GUI extends Application {
         TextField releasePriceTextField = new TextField();
         TextField salesPriceTextField = new TextField();
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Purchase date:"), purchaseDateTextField);
+        grid.addRow(0, new Text("Purchase date (like 2001-01-01):"), purchaseDateTextField);
         grid.addRow(1, new Text("Name of car:"), carNameTextField);
         grid.addRow(2, new Text("Color:"), colorTextField);
         grid.addRow(3, new Text("Engine number:"), engineNumberTextField);
