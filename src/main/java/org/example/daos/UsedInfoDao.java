@@ -1,6 +1,7 @@
 package org.example.daos;
 
 import org.example.mappers.UsedInfo;
+import org.example.utils.DateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -16,7 +17,7 @@ public class UsedInfoDao {
             resultString.append("ID: ").append(usedInfo.getId())
                     .append(", Employee ID: ").append(usedInfo.getEmployeeId())
                     .append(", Purchase Price: ").append(usedInfo.getPurchasePrice())
-                    .append(", Certificate Date: ").append(usedInfo.getCertificateDate())
+                    .append(", Certificate Date: ").append(DateUtil.formatDate(usedInfo.getCertificateDate()))
                     .append("\n");
         }
         return resultString.toString();

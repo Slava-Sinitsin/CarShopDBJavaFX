@@ -12,7 +12,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.daos.*;
 import org.example.mappers.*;
-import org.example.utils.DateUtils;
+import org.example.utils.DateUtil;
 import org.example.utils.HibernateUtil;
 import org.hibernate.Session;
 
@@ -35,7 +35,11 @@ public class GUI extends Application {
     ToggleGroup carTypeGroup = new ToggleGroup();
     Button sellCarButton = new Button("Sell car");
     Button addUsedInfoButton = new Button("Add used info");
+    Button AddNewCertifyingDocumentButton = new Button("Add certifying document");
     Button repairCarButton = new Button("Repair car");
+    Button addPartButton = new Button("Add part");
+    Button addNewEmployeeButton = new Button("Add new employee");
+    Button changeEmployeePositionButton = new Button("Change employee's position");
     TextArea responseTextArea = new TextArea();
 
     public static void main(String[] args) {
@@ -49,8 +53,8 @@ public class GUI extends Application {
         Scene scene = new Scene(group);
         stage.setScene(scene);
         stage.setTitle("Lab2");
-        stage.setWidth(1920);
-        stage.setHeight(1080);
+        stage.setWidth(1760);
+        stage.setHeight(780);
 
         transferInfoListButton.setLayoutX(20);
         transferInfoListButton.setLayoutY(20);
@@ -80,18 +84,30 @@ public class GUI extends Application {
         clientsSellerListButton.setLayoutY(340);
 
         addCarButton.setLayoutX(20);
-        addCarButton.setLayoutY(380);
+        addCarButton.setLayoutY(415);
 
         sellCarButton.setLayoutX(20);
-        sellCarButton.setLayoutY(420);
+        sellCarButton.setLayoutY(455);
 
         addUsedInfoButton.setLayoutX(20);
-        addUsedInfoButton.setLayoutY(460);
+        addUsedInfoButton.setLayoutY(495);
+
+        AddNewCertifyingDocumentButton.setLayoutX(20);
+        AddNewCertifyingDocumentButton.setLayoutY(535);
 
         repairCarButton.setLayoutX(20);
-        repairCarButton.setLayoutY(500);
+        repairCarButton.setLayoutY(575);
 
-        responseTextArea.setLayoutX(400);
+        addPartButton.setLayoutX(20);
+        addPartButton.setLayoutY(615);
+
+        addNewEmployeeButton.setLayoutX(20);
+        addNewEmployeeButton.setLayoutY(655);
+
+        changeEmployeePositionButton.setLayoutX(20);
+        changeEmployeePositionButton.setLayoutY(695);
+
+        responseTextArea.setLayoutX(250);
         responseTextArea.setLayoutY(20);
         responseTextArea.setEditable(false);
         responseTextArea.setWrapText(true);
@@ -99,8 +115,8 @@ public class GUI extends Application {
 
         group.getChildren().addAll(transferInfoListButton, employeeListButton, usedInfoListButton, partListButton,
                 carListButton, certifyingDocumentListButton, passportListButton, clientsBuyerListButton,
-                clientsSellerListButton, addCarButton, sellCarButton, addUsedInfoButton, repairCarButton,
-                responseTextArea);
+                clientsSellerListButton, addCarButton, sellCarButton, addUsedInfoButton, AddNewCertifyingDocumentButton,
+                repairCarButton, addPartButton, changeEmployeePositionButton, addNewEmployeeButton, responseTextArea);
         stage.show();
 
         transferInfoListButton.setOnAction(e -> responseTextArea.setText(TransferInfoDao.getAllTransferInfo(session)));
@@ -115,9 +131,14 @@ public class GUI extends Application {
         addCarButton.setOnAction(e -> showCarTypeDialog());
         sellCarButton.setOnAction(e -> startCarSellDialog());
         addUsedInfoButton.setOnAction(e -> addNewUsedInfoDialog());
+        AddNewCertifyingDocumentButton.setOnAction(e -> addNewCertifyingDocumentDialog());
         repairCarButton.setOnAction(e -> repairCarDialog());
+        addPartButton.setOnAction(e -> addPartDialog());
+        addNewEmployeeButton.setOnAction(e -> addNewEmployeeDialog());
+        changeEmployeePositionButton.setOnAction(e -> changeEmployeePositionDialog());
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error!");
@@ -165,16 +186,16 @@ public class GUI extends Application {
         TextField releasePriceTextField = new TextField();
         TextField salesPriceTextField = new TextField();
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Enter name of car:"), nameTextField);
-        grid.addRow(1, new Text("Enter color:"), colorTextField);
-        grid.addRow(2, new Text("Enter engine number:"), engineNumberTextField);
-        grid.addRow(3, new Text("Enter reg number:"), regNumberTextField);
-        grid.addRow(4, new Text("Enter body number:"), bodyNumberTextField);
-        grid.addRow(5, new Text("Enter chassis number:"), chassisNumberTextField);
-        grid.addRow(6, new Text("Enter release date (like 2001-01-01):"), releaseDateTextField);
-        grid.addRow(7, new Text("Enter mileage:"), mileageTextField);
-        grid.addRow(8, new Text("Enter release price:"), releasePriceTextField);
-        grid.addRow(9, new Text("Enter sales price:"), salesPriceTextField);
+        grid.addRow(0, new Text("Name of car:"), nameTextField);
+        grid.addRow(1, new Text("Color:"), colorTextField);
+        grid.addRow(2, new Text("Engine number:"), engineNumberTextField);
+        grid.addRow(3, new Text("Reg number:"), regNumberTextField);
+        grid.addRow(4, new Text("Body number:"), bodyNumberTextField);
+        grid.addRow(5, new Text("Chassis number:"), chassisNumberTextField);
+        grid.addRow(6, new Text("Release date (like 2001-01-01):"), releaseDateTextField);
+        grid.addRow(7, new Text("Mileage:"), mileageTextField);
+        grid.addRow(8, new Text("Release price:"), releasePriceTextField);
+        grid.addRow(9, new Text("Sales price:"), salesPriceTextField);
         alert.getDialogPane().setContent(grid);
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
@@ -187,7 +208,7 @@ public class GUI extends Application {
                             regNumberTextField.getText(),
                             bodyNumberTextField.getText(),
                             chassisNumberTextField.getText(),
-                            DateUtils.parseDate(releaseDateTextField.getText()),
+                            DateUtil.parseDate(releaseDateTextField.getText()),
                             Integer.parseInt(mileageTextField.getText()),
                             Integer.parseInt(releasePriceTextField.getText()),
                             Integer.parseInt(salesPriceTextField.getText())
@@ -199,6 +220,7 @@ public class GUI extends Application {
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void usedInfoDialog() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Used car adding");
@@ -219,38 +241,48 @@ public class GUI extends Application {
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void addUsedInfoDialog() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Used info adding");
         alert.setHeaderText(null);
-        TextField firstNameTextField = new TextField();
-        TextField secondNameTextField = new TextField();
+        ComboBox<Employee> employeeComboBox = new ComboBox<>();
         TextField purchasePriceTextField = new TextField();
         TextField certificateDateTextField = new TextField();
+        employeeComboBox.setMinWidth(150);
+        employeeComboBox.setVisibleRowCount(10);
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("                         Document not found, add a new one"));
-        grid.addRow(1, new Text("Employee first name:"), firstNameTextField);
-        grid.addRow(2, new Text("Employee second name:"), secondNameTextField);
-        grid.addRow(3, new Text("Purchase price:"), purchasePriceTextField);
-        grid.addRow(4, new Text("Certificate date (like 2001-01-01):"), certificateDateTextField);
+        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("Purchase price"), new Text("     "), new Text("Certificate date (like 2001-01-01)"));
+        grid.addRow(1, employeeComboBox, new Text("     "), purchasePriceTextField, new Text("     "), certificateDateTextField);
         alert.getDialogPane().setContent(grid);
+        List<Employee> allEmployees = EmployeeDao.getAllEmployeesList(session);
+        allEmployees.remove(0);
+        employeeComboBox.getItems().addAll(allEmployees);
+        employeeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                purchasePriceTextField.clear();
+                certificateDateTextField.clear();
+            }
+        });
         alert.showAndWait().ifPresent(result -> {
-            try {
-                if (result == ButtonType.OK) {
+            if (result == ButtonType.OK) {
+                Employee selectedEmployee = employeeComboBox.getValue();
+                try {
                     UsedInfo usedInfo = new UsedInfo(
-                            EmployeeDao.getEmployeeIdByNames(session, firstNameTextField.getText(), secondNameTextField.getText()),
+                            selectedEmployee.getId(),
                             Integer.parseInt(purchasePriceTextField.getText()),
-                            DateUtils.parseDate(certificateDateTextField.getText())
+                            DateUtil.parseDate(certificateDateTextField.getText())
                     );
                     UsedInfoDao.addUsedInfo(session, usedInfo);
                     passportDialog(usedInfo.getId());
+                } catch (NumberFormatException e) {
+                    showErrorAlert("Input Error!");
                 }
-            } catch (NumberFormatException e) {
-                showErrorAlert("Input Error!");
             }
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void passportDialog(Integer usedInfoId) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Used car adding");
@@ -271,6 +303,7 @@ public class GUI extends Application {
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void addNewPassportAddCarDialog(Integer usedInfoId, Integer passportId) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Add new customer");
@@ -299,9 +332,9 @@ public class GUI extends Application {
                         firstNameTextField.getText(),
                         secondNameTextField.getText(),
                         middleNameTextField.getText(),
-                        DateUtils.parseDate(birthDateTextField.getText()),
+                        DateUtil.parseDate(birthDateTextField.getText()),
                         addressTextField.getText(),
-                        DateUtils.parseDate(issueDateTextField.getText()),
+                        DateUtil.parseDate(issueDateTextField.getText()),
                         genderTextField.getText()
                 );
                 PassportDao.addPassport(session, passport);
@@ -310,6 +343,7 @@ public class GUI extends Application {
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void certifyingDocumentDialog(Integer usedInfoId, Integer passportId) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Used car adding");
@@ -338,7 +372,7 @@ public class GUI extends Application {
         TextField issueDateTextField = new TextField();
         TextField issuerTextField = new TextField();
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("                         Add new certifying document"));
+        grid.addRow(0, new Text("                         Certifying document, add a new one"));
         grid.addRow(1, new Text("Name:"), nameTextField);
         grid.addRow(2, new Text("Issue date (like 2001-01-01):"), issueDateTextField);
         grid.addRow(3, new Text("Issuer:"), issuerTextField);
@@ -348,7 +382,7 @@ public class GUI extends Application {
                 CertifyingDocument certifyingDocument = new CertifyingDocument(
                         certifyingDocumentId,
                         nameTextField.getText(),
-                        DateUtils.parseDate(issueDateTextField.getText()),
+                        DateUtil.parseDate(issueDateTextField.getText()),
                         issuerTextField.getText()
                 );
                 CertifyingDocumentDao.addCertifyingDocument(session, certifyingDocument);
@@ -397,7 +431,7 @@ public class GUI extends Application {
                             regNumberTextField.getText(),
                             bodyNumberTextField.getText(),
                             chassisNumberTextField.getText(),
-                            DateUtils.parseDate(releaseDateTextField.getText()),
+                            DateUtil.parseDate(releaseDateTextField.getText()),
                             Integer.parseInt(mileageTextField.getText()),
                             Integer.parseInt(releasePriceTextField.getText()),
                             Integer.parseInt(salesPriceTextField.getText())
@@ -407,7 +441,7 @@ public class GUI extends Application {
                             passportId,
                             car.getId(),
                             certifyingDocumentId,
-                            DateUtils.parseDate(purchaseDateTextField.getText())
+                            DateUtil.parseDate(purchaseDateTextField.getText())
                     ));
                 } catch (NumberFormatException e) {
                     showErrorAlert("Input Error!");
@@ -469,9 +503,9 @@ public class GUI extends Application {
                         firstNameTextField.getText(),
                         secondNameTextField.getText(),
                         middleNameTextField.getText(),
-                        DateUtils.parseDate(birthDateTextField.getText()),
+                        DateUtil.parseDate(birthDateTextField.getText()),
                         addressTextField.getText(),
-                        DateUtils.parseDate(issueDateTextField.getText()),
+                        DateUtil.parseDate(issueDateTextField.getText()),
                         genderTextField.getText()
                 );
                 PassportDao.addPassport(session, passport);
@@ -500,7 +534,7 @@ public class GUI extends Application {
                     ClientBuyerDao.addClientBuyer(session, new ClientBuyer(
                             passportId,
                             CarDao.getCarIdByRegNumber(session, regNumberTextField.getText()),
-                            DateUtils.parseDate(saleDateTextField.getText()),
+                            DateUtil.parseDate(saleDateTextField.getText()),
                             Long.parseLong(accounNumbeTextField.getText()),
                             paymenTypeTextField.getText()
                     ));
@@ -516,25 +550,66 @@ public class GUI extends Application {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Used info adding");
         alert.setHeaderText(null);
-        TextField firstNameTextField = new TextField();
-        TextField secondNameTextField = new TextField();
+        ComboBox<Employee> employeeComboBox = new ComboBox<>();
         TextField purchasePriceTextField = new TextField();
         TextField certificateDateTextField = new TextField();
+        employeeComboBox.setMinWidth(150);
+        employeeComboBox.setVisibleRowCount(10);
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Employee first name:"), firstNameTextField);
-        grid.addRow(1, new Text("Employee second name:"), secondNameTextField);
-        grid.addRow(2, new Text("Purchase price:"), purchasePriceTextField);
-        grid.addRow(3, new Text("Certificate date (like 2001-01-01):"), certificateDateTextField);
+        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("Purchase price"), new Text("     "), new Text("Certificate date (like 2001-01-01)"));
+        grid.addRow(1, employeeComboBox, new Text("     "), purchasePriceTextField, new Text("     "), certificateDateTextField);
+        alert.getDialogPane().setContent(grid);
+        List<Employee> allEmployees = EmployeeDao.getAllEmployeesList(session);
+        allEmployees.remove(0);
+        employeeComboBox.getItems().addAll(allEmployees);
+        employeeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                purchasePriceTextField.clear();
+                certificateDateTextField.clear();
+            }
+        });
+        alert.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                Employee selectedEmployee = employeeComboBox.getValue();
+                try {
+                    UsedInfo usedInfo = new UsedInfo(
+                            selectedEmployee.getId(),
+                            Integer.parseInt(purchasePriceTextField.getText()),
+                            DateUtil.parseDate(certificateDateTextField.getText())
+                    );
+                    UsedInfoDao.addUsedInfo(session, usedInfo);
+                } catch (NumberFormatException e) {
+                    showErrorAlert("Input Error!");
+                }
+            }
+        });
+    }
+
+    private void addNewCertifyingDocumentDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Add certifying document");
+        alert.setHeaderText(null);
+        TextField idTextField = new TextField();
+        TextField nameTextField = new TextField();
+        TextField issueDateTextField = new TextField();
+        TextField issuerTextField = new TextField();
+        GridPane grid = new GridPane();
+        grid.addRow(0, new Text(""));
+        grid.addRow(1, new Text("ID:"), idTextField);
+        grid.addRow(2, new Text("Name:"), nameTextField);
+        grid.addRow(3, new Text("Issue date (like 2001-01-01):"), issueDateTextField);
+        grid.addRow(4, new Text("Issuer:"), issuerTextField);
         alert.getDialogPane().setContent(grid);
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
                 try {
-                    UsedInfo usedInfo = new UsedInfo(
-                            EmployeeDao.getEmployeeIdByNames(session, firstNameTextField.getText(), secondNameTextField.getText()),
-                            Integer.parseInt(purchasePriceTextField.getText()),
-                            DateUtils.parseDate(certificateDateTextField.getText())
+                    CertifyingDocument certifyingDocument = new CertifyingDocument(
+                            Integer.parseInt(idTextField.getText()),
+                            nameTextField.getText(),
+                            DateUtil.parseDate(issueDateTextField.getText()),
+                            issuerTextField.getText()
                     );
-                    UsedInfoDao.addUsedInfo(session, usedInfo);
+                    CertifyingDocumentDao.addCertifyingDocument(session, certifyingDocument);
                 } catch (NumberFormatException e) {
                     showErrorAlert("Input Error!");
                 }
@@ -548,28 +623,28 @@ public class GUI extends Application {
         alert.setTitle("Repair car");
         alert.setHeaderText(null);
         ComboBox<Car> carChoiceBox = new ComboBox<>();
-        ComboBox<Part> partsChoiceBox = new ComboBox<>();
+        ComboBox<Part> partsComboBox = new ComboBox<>();
         carChoiceBox.setPrefWidth(200);
         carChoiceBox.setVisibleRowCount(10);
-        partsChoiceBox.setPrefWidth(200);
-        partsChoiceBox.setVisibleRowCount(10);
+        partsComboBox.setPrefWidth(200);
+        partsComboBox.setVisibleRowCount(10);
         List<Car> allCars = CarDao.getAllCarsList(session);
         carChoiceBox.getItems().addAll(allCars);
         carChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                partsChoiceBox.getItems().clear();
+                partsComboBox.getItems().clear();
                 List<Part> partsForSelectedCar = PartDao.getPartsForCar(session, newValue.getId());
-                partsChoiceBox.getItems().setAll(partsForSelectedCar);
+                partsComboBox.getItems().setAll(partsForSelectedCar);
             }
         });
         GridPane grid = new GridPane();
         grid.addRow(0, new Text("Select car"), new Text("     "), new Text("Select part"));
-        grid.addRow(1, carChoiceBox, new Text("     "), partsChoiceBox);
+        grid.addRow(1, carChoiceBox, new Text("     "), partsComboBox);
         alert.getDialogPane().setContent(grid);
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
                 Car selectedCar = carChoiceBox.getValue();
-                Part selectedPart = partsChoiceBox.getValue();
+                Part selectedPart = partsComboBox.getValue();
                 if (selectedCar != null && selectedPart != null) {
                     selectedPart.setCount(selectedPart.getCount() - 1);
                     if (selectedPart.getCount() == 0) {
@@ -577,6 +652,148 @@ public class GUI extends Application {
                     } else {
                         PartDao.updatePart(session, selectedPart);
                     }
+                }
+            }
+        });
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private void addPartDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.getDialogPane().setPrefWidth(500);
+        alert.setTitle("Add part");
+        alert.setHeaderText(null);
+        ComboBox<Car> carComboBox = new ComboBox<>();
+        TextField nameTextField = new TextField();
+        TextField priceTextField = new TextField();
+        TextField countTextField = new TextField();
+        carComboBox.setPrefWidth(200);
+        carComboBox.setVisibleRowCount(10);
+        nameTextField.setPrefWidth(200);
+        List<Car> allCars = CarDao.getAllCarsList(session);
+        carComboBox.getItems().addAll(allCars);
+        carComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                nameTextField.clear();
+                priceTextField.clear();
+                countTextField.clear();
+            }
+        });
+        GridPane grid = new GridPane();
+        grid.addRow(0, new Text("Select car"), new Text("     "), new Text("Name"), new Text("     "), new Text("Price"), new Text("     "), new Text("Count"));
+        grid.addRow(1, carComboBox, new Text("     "), nameTextField, new Text("     "), priceTextField, new Text("     "), countTextField);
+        alert.getDialogPane().setContent(grid);
+        alert.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                Car selectedCar = carComboBox.getValue();
+                try {
+                    if (selectedCar != null && nameTextField.getText() != null && priceTextField.getText() != null && countTextField.getText() != null) {
+                        PartDao.addPart(session, new Part(
+                                selectedCar.getId(),
+                                nameTextField.getText(),
+                                Integer.parseInt(priceTextField.getText()),
+                                Integer.parseInt(countTextField.getText())
+                        ));
+                    }
+                } catch (NumberFormatException e) {
+                    showErrorAlert("Input Error!");
+                }
+            }
+        });
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private void addNewEmployeeDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("New employee adding");
+        alert.setHeaderText(null);
+        TextField firstNameTextField = new TextField();
+        TextField secondNameTextField = new TextField();
+        TextField middleNameTextField = new TextField();
+        TextField birthDateTextField = new TextField();
+        TextField addressTextField = new TextField();
+        TextField positionTextField = new TextField();
+        TextField salaryTextField = new TextField();
+        GridPane grid = new GridPane();
+        grid.addRow(0, new Text("First name:"), firstNameTextField);
+        grid.addRow(1, new Text("Second name:"), secondNameTextField);
+        grid.addRow(2, new Text("Middle name:"), middleNameTextField);
+        grid.addRow(4, new Text("Birth date (like 2001-01-01):"), birthDateTextField);
+        grid.addRow(5, new Text("Address:"), addressTextField);
+        grid.addRow(6, new Text("Position:"), positionTextField);
+        grid.addRow(7, new Text("Salary:"), salaryTextField);
+        alert.getDialogPane().setContent(grid);
+        alert.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                try {
+                    EmployeeDao.addEmployee(session, new Employee(
+                            1,
+                            firstNameTextField.getText(),
+                            secondNameTextField.getText(),
+                            middleNameTextField.getText(),
+                            DateUtil.parseDate(birthDateTextField.getText()),
+                            addressTextField.getText(),
+                            positionTextField.getText(),
+                            Integer.parseInt(salaryTextField.getText())
+                    ));
+                } catch (NumberFormatException e) {
+                    showErrorAlert("Input Error!");
+                }
+            }
+        });
+    }
+
+    private void changeEmployeePositionDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.getDialogPane().setPrefWidth(500);
+        alert.setTitle("Change employee's position");
+        alert.setHeaderText(null);
+        ComboBox<Employee> employeeComboBox = new ComboBox<>();
+        TextField newPositionTextField = new TextField();
+        TextField newSalaryTextField = new TextField();
+        TextField transferReasonTextField = new TextField();
+        TextField orderDateTextField = new TextField();
+        employeeComboBox.setMinWidth(150);
+        employeeComboBox.setVisibleRowCount(10);
+        List<Employee> allEmployees = EmployeeDao.getAllEmployeesList(session);
+        allEmployees.remove(0);
+        employeeComboBox.getItems().addAll(allEmployees);
+        employeeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                newPositionTextField.clear();
+                newSalaryTextField.clear();
+                transferReasonTextField.clear();
+                orderDateTextField.clear();
+            }
+        });
+        GridPane grid = new GridPane();
+        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("New position"), new Text("     "), new Text("New salary"), new Text("     "), new Text("Transfer reason"), new Text("     "), new Text("Order date (like 2001-01-01)"));
+        grid.addRow(1, employeeComboBox, new Text("     "), newPositionTextField, new Text("     "), newSalaryTextField, new Text("     "), transferReasonTextField, new Text("     "), orderDateTextField);
+        alert.getDialogPane().setContent(grid);
+        alert.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                Employee selectedEmployee = employeeComboBox.getValue();
+                try {
+                    if (selectedEmployee != null && newPositionTextField.getText() != null && newSalaryTextField.getText() != null && transferReasonTextField.getText() != null && orderDateTextField.getText() != null) {
+                        TransferInfo transferInfo = new TransferInfo(
+                                selectedEmployee.getPosition(),
+                                transferReasonTextField.getText(),
+                                DateUtil.parseDate(orderDateTextField.getText())
+                        );
+                        TransferInfoDao.addTransferInfo(session, transferInfo);
+                        EmployeeDao.addEmployee(session, new Employee(
+                                transferInfo.getId(),
+                                selectedEmployee.getFirstName(),
+                                selectedEmployee.getSecondName(),
+                                selectedEmployee.getMiddleName(),
+                                selectedEmployee.getBirthDate(),
+                                selectedEmployee.getAddress(),
+                                newPositionTextField.getText(),
+                                Integer.parseInt(newSalaryTextField.getText())
+                        ));
+                    }
+                } catch (NumberFormatException e) {
+                    showErrorAlert("Input Error!");
                 }
             }
         });

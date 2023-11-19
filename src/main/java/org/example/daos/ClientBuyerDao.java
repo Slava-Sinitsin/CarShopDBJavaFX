@@ -1,6 +1,7 @@
 package org.example.daos;
 
 import org.example.mappers.ClientBuyer;
+import org.example.utils.DateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -16,7 +17,7 @@ public class ClientBuyerDao {
             resultString.append("ID: ").append(clientBuyer.getId())
                     .append(", Passport ID: ").append(clientBuyer.getPassportId())
                     .append(", Car ID: ").append(clientBuyer.getCarId())
-                    .append(", Sale Date: ").append(clientBuyer.getSaleDate())
+                    .append(", Sale Date: ").append(DateUtil.formatDate(clientBuyer.getSaleDate()))
                     .append(", Account Number: ").append(clientBuyer.getAccountNumber())
                     .append(", Payment Type: ").append(clientBuyer.getPaymentType())
                     .append("\n");

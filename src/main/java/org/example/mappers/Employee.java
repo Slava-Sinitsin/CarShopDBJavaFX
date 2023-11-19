@@ -6,6 +6,20 @@ import java.util.Objects;
 
 @Entity
 public class Employee {
+    public Employee() {
+    }
+
+    public Employee(Integer transferInfoId, String firstName, String secondName, String middleName, Date birthDate, String address, String position, Integer salary) {
+        this.transferInfoId = transferInfoId;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.middleName = middleName;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.position = position;
+        this.salary = salary;
+    }
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -119,5 +133,10 @@ public class Employee {
     @Override
     public int hashCode() {
         return Objects.hash(id, transferInfoId, firstName, secondName, middleName, birthDate, address, position, salary);
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + firstName + " " + secondName + " ";
     }
 }

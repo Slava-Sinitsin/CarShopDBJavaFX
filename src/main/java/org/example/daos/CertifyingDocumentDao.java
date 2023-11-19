@@ -1,6 +1,7 @@
 package org.example.daos;
 
 import org.example.mappers.CertifyingDocument;
+import org.example.utils.DateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -15,7 +16,7 @@ public class CertifyingDocumentDao {
         for (CertifyingDocument certifyingDocument : certifyingDocumentList) {
             resultString.append("ID: ").append(certifyingDocument.getId())
                     .append(", Name: ").append(certifyingDocument.getName())
-                    .append(", Issue Date: ").append(certifyingDocument.getIssueDate())
+                    .append(", Issue Date: ").append(DateUtil.formatDate(certifyingDocument.getIssueDate()))
                     .append(", Issuer: ").append(certifyingDocument.getIssuer())
                     .append("\n");
         }

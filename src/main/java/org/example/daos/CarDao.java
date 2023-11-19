@@ -1,6 +1,7 @@
 package org.example.daos;
 
 import org.example.mappers.Car;
+import org.example.utils.DateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -21,7 +22,7 @@ public class CarDao {
                     .append(", Reg Number: ").append(car.getRegNumber())
                     .append(", Body Number: ").append(car.getBodyNumber())
                     .append(", Chassis Number: ").append(car.getChassisNumber())
-                    .append(", Release Date: ").append(car.getReleaseDate())
+                    .append(", Release Date: ").append(DateUtil.formatDate(car.getReleaseDate()))
                     .append(", Mileage: ").append(car.getMileage())
                     .append(", Release Price: ").append(car.getReleasePrice())
                     .append(", Sales Price: ").append(car.getSalesPrice())
@@ -53,6 +54,11 @@ public class CarDao {
 
     public static List<Car> getAllCarsList(Session session) {
         Query<Car> query = session.createQuery("FROM Car", Car.class);
+        return query.list();
+    }
+
+    public static List<String> getAllUniqueCarNames(Session session) {
+        Query<String> query = session.createQuery("SELECT DISTINCT c.name FROM Car c", String.class);
         return query.list();
     }
 }

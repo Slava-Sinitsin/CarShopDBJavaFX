@@ -1,6 +1,7 @@
 package org.example.daos;
 
 import org.example.mappers.Passport;
+import org.example.utils.DateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -17,9 +18,9 @@ public class PassportDao {
                     .append(", First Name: ").append(passport.getFirstName())
                     .append(", Second Name: ").append(passport.getSecondName())
                     .append(", Middle Name: ").append(passport.getMiddleName())
-                    .append(", Birth Date: ").append(passport.getBirthDate())
+                    .append(", Birth Date: ").append(DateUtil.formatDate(passport.getBirthDate()))
                     .append(", Address: ").append(passport.getAddress())
-                    .append(", Issue Date: ").append(passport.getIssueDate())
+                    .append(", Issue Date: ").append(DateUtil.formatDate(passport.getIssueDate()))
                     .append(", Gender: ").append(passport.getGender())
                     .append("\n");
         }

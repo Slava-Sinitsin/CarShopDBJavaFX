@@ -7,6 +7,15 @@ import java.util.Objects;
 @Entity
 @Table(name = "transfer_info", schema = "public", catalog = "car_shop")
 public class TransferInfo {
+    public TransferInfo() {
+    }
+
+    public TransferInfo(String previousPosition, String transferReason, Date orderDate) {
+        this.previousPosition = previousPosition;
+        this.transferReason = transferReason;
+        this.orderDate = orderDate;
+    }
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)

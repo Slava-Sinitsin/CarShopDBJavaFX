@@ -5,6 +5,16 @@ import java.util.Objects;
 
 @Entity
 public class Part {
+    public Part() {
+    }
+
+    public Part(Integer carId, String name, Integer price, Integer count) {
+        this.carId = carId;
+        this.name = name;
+        this.price = price;
+        this.count = count;
+    }
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)

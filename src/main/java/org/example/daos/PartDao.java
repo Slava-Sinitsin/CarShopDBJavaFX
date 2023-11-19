@@ -1,5 +1,6 @@
 package org.example.daos;
 
+import org.example.mappers.Car;
 import org.example.mappers.Part;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -62,5 +63,20 @@ public class PartDao {
 
     public static Part getPartById(Session session, Long partId) {
         return session.get(Part.class, partId);
+    }
+
+    @SuppressWarnings("CallToPrintStackTrace")
+    public static void addPart(Session session, Part part) {
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.persist(part);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 }
