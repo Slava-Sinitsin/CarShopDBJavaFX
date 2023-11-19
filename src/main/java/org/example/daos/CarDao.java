@@ -61,4 +61,9 @@ public class CarDao {
         Query<String> query = session.createQuery("SELECT DISTINCT c.name FROM Car c", String.class);
         return query.list();
     }
+
+    public static List<Car> getUnsoldCars(Session session) {
+        Query<Car> query = session.createQuery("FROM Car c WHERE c.id NOT IN (SELECT cb.carId FROM ClientBuyer cb)", Car.class);
+        return query.list();
+    }
 }

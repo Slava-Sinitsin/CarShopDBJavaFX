@@ -15,12 +15,16 @@ public class Part {
         this.count = count;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "car_id", nullable = false, insertable = false, updatable = false)
+    private Car car;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
     @Basic
-    @Column(name = "car_id", nullable = true)
+    @Column(name = "car_id", nullable = false)
     private Integer carId;
     @Basic
     @Column(name = "name", nullable = false, length = -1)
@@ -31,6 +35,14 @@ public class Part {
     @Basic
     @Column(name = "count", nullable = false)
     private Integer count;
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
 
     public Integer getId() {
         return id;

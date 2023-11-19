@@ -2,6 +2,7 @@ package org.example.mappers;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +20,13 @@ public class Employee {
         this.position = position;
         this.salary = salary;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_info_id", unique = true, nullable = false, insertable = false, updatable = false)
+    private TransferInfo transferInfo;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<UsedInfo> usedInfoList;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -49,6 +57,22 @@ public class Employee {
     @Basic
     @Column(name = "salary", nullable = false)
     private Integer salary;
+
+    public TransferInfo getTransferInfo() {
+        return transferInfo;
+    }
+
+    public void setTransferInfo(TransferInfo transferInfo) {
+        this.transferInfo = transferInfo;
+    }
+
+    public List<UsedInfo> getUsedInfoList() {
+        return usedInfoList;
+    }
+
+    public void setUsedInfoList(List<UsedInfo> usedInfoList) {
+        this.usedInfoList = usedInfoList;
+    }
 
     public Integer getId() {
         return id;

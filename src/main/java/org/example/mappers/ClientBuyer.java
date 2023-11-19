@@ -18,6 +18,14 @@ public class ClientBuyer {
         this.paymentType = paymentType;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "passport_id", nullable = false, insertable = false, updatable = false)
+    private Passport passport;
+
+    @OneToOne
+    @JoinColumn(name = "car_id", unique = true, nullable = false, insertable = false, updatable = false)
+    private Car car;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -38,6 +46,22 @@ public class ClientBuyer {
     @Basic
     @Column(name = "payment_type", nullable = false, length = -1)
     private String paymentType;
+
+    public Passport getPassport() {
+        return passport;
+    }
+
+    public void setPassport(Passport passport) {
+        this.passport = passport;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
 
     public Integer getId() {
         return id;

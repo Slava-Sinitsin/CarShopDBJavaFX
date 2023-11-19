@@ -2,6 +2,7 @@ package org.example.mappers;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +23,13 @@ public class Car {
         this.releasePrice = releasePrice;
         this.salesPrice = salesPrice;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "used_info_id", nullable = false, insertable = false, updatable = false)
+    private UsedInfo usedInfo;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    private List<Part> parts;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -61,6 +69,22 @@ public class Car {
     @Basic
     @Column(name = "sales_price", nullable = false)
     private Integer salesPrice;
+
+    public UsedInfo getUsedInfo() {
+        return usedInfo;
+    }
+
+    public void setUsedInfo(UsedInfo usedInfo) {
+        this.usedInfo = usedInfo;
+    }
+
+    public List<Part> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
+    }
 
     public Integer getId() {
         return id;

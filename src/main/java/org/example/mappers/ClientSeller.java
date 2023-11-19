@@ -17,6 +17,18 @@ public class ClientSeller {
         this.purchaseDate = purchaseDate;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "passport_id", nullable = false, insertable = false, updatable = false)
+    private Passport passport;
+
+    @OneToOne
+    @JoinColumn(name = "car_id", unique = true, nullable = false, insertable = false, updatable = false)
+    private Car car;
+
+    @OneToOne
+    @JoinColumn(name = "certifying_document_id", unique = true, nullable = false, insertable = false, updatable = false)
+    private CertifyingDocument certifyingDocument;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -34,6 +46,30 @@ public class ClientSeller {
     @Temporal(TemporalType.DATE)
     @Column(name = "purchase_date", nullable = false)
     private Date purchaseDate;
+
+    public Passport getPassport() {
+        return passport;
+    }
+
+    public void setPassport(Passport passport) {
+        this.passport = passport;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    public CertifyingDocument getCertifyingDocument() {
+        return certifyingDocument;
+    }
+
+    public void setCertifyingDocument(CertifyingDocument certifyingDocument) {
+        this.certifyingDocument = certifyingDocument;
+    }
 
     public Integer getId() {
         return id;

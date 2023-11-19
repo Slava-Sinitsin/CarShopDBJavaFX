@@ -29,15 +29,6 @@ public class EmployeeDao {
         return resultString.toString();
     }
 
-    public static Integer getEmployeeIdByNames(Session session, String firstName, String secondName) {
-        Query<Employee> query = session.createQuery(
-                "FROM Employee e WHERE e.firstName = :firstName AND e.secondName = :secondName", Employee.class);
-        query.setParameter("firstName", firstName);
-        query.setParameter("secondName", secondName);
-        System.out.println(query.uniqueResult());
-        return query.uniqueResult().getId();
-    }
-
     public static List<Employee> getAllEmployeesList(Session session) {
         Query<Employee> query = session.createQuery(
                 "SELECT e FROM Employee e " +

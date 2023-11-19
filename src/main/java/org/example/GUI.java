@@ -252,7 +252,7 @@ public class GUI extends Application {
         employeeComboBox.setMinWidth(150);
         employeeComboBox.setVisibleRowCount(10);
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("Purchase price"), new Text("     "), new Text("Certificate date (like 2001-01-01)"));
+        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("Purchase price:"), new Text("     "), new Text("Certificate date (like 2001-01-01):"));
         grid.addRow(1, employeeComboBox, new Text("     "), purchasePriceTextField, new Text("     "), certificateDateTextField);
         alert.getDialogPane().setContent(grid);
         List<Employee> allEmployees = EmployeeDao.getAllEmployeesList(session);
@@ -351,7 +351,7 @@ public class GUI extends Application {
         TextField certifyingDocumentIdTextField = new TextField();
         GridPane grid = new GridPane();
         grid.addRow(0, new Text(""));
-        grid.addRow(1, new Text("certifying document ID:       "), certifyingDocumentIdTextField);
+        grid.addRow(1, new Text("Certifying document ID:       "), certifyingDocumentIdTextField);
         alert.getDialogPane().setContent(grid);
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
@@ -514,29 +514,40 @@ public class GUI extends Application {
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void finalCarSellDialog(Integer passportId) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Sell car");
         alert.setHeaderText(null);
-        TextField regNumberTextField = new TextField();
+        ComboBox<Car> carComboBox = new ComboBox<>();
         TextField saleDateTextField = new TextField();
         TextField accounNumbeTextField = new TextField();
-        TextField paymenTypeTextField = new TextField();
+        TextField paymentTypeTextField = new TextField();
+        carComboBox.setPrefWidth(200);
+        carComboBox.setVisibleRowCount(10);
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Reg number:"), regNumberTextField);
-        grid.addRow(1, new Text("Sale date (like 2001-01-01):"), saleDateTextField);
-        grid.addRow(2, new Text("Account number:"), accounNumbeTextField);
-        grid.addRow(3, new Text("Payment type (cash, card, transfer):"), paymenTypeTextField);
+        grid.addRow(0, new Text("Select car"), new Text("     "), new Text("Sale date (like 2001-01-01):"), new Text("     "), new Text("Account number:"), new Text("     "), new Text("Payment type (cash, card, transfer):"));
+        grid.addRow(1, carComboBox, new Text("     "), saleDateTextField, new Text("     "), accounNumbeTextField, new Text("     "), paymentTypeTextField);
         alert.getDialogPane().setContent(grid);
+        List<Car> unsoldCars = CarDao.getUnsoldCars(session);
+        carComboBox.getItems().addAll(unsoldCars);
+        carComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                saleDateTextField.clear();
+                accounNumbeTextField.clear();
+                paymentTypeTextField.clear();
+            }
+        });
         alert.showAndWait().ifPresent(result -> {
-            if (result == ButtonType.OK) {
+            if (result == ButtonType.OK && saleDateTextField.getText() != null && accounNumbeTextField.getText() != null && paymentTypeTextField.getText() != null) {
+                Car selectedCar = carComboBox.getValue();
                 try {
                     ClientBuyerDao.addClientBuyer(session, new ClientBuyer(
                             passportId,
-                            CarDao.getCarIdByRegNumber(session, regNumberTextField.getText()),
+                            selectedCar.getId(),
                             DateUtil.parseDate(saleDateTextField.getText()),
                             Long.parseLong(accounNumbeTextField.getText()),
-                            paymenTypeTextField.getText()
+                            paymentTypeTextField.getText()
                     ));
                 } catch (NumberFormatException e) {
                     showErrorAlert("Input Error!");
@@ -556,7 +567,7 @@ public class GUI extends Application {
         employeeComboBox.setMinWidth(150);
         employeeComboBox.setVisibleRowCount(10);
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("Purchase price"), new Text("     "), new Text("Certificate date (like 2001-01-01)"));
+        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("Purchase price:"), new Text("     "), new Text("Certificate date (like 2001-01-01):"));
         grid.addRow(1, employeeComboBox, new Text("     "), purchasePriceTextField, new Text("     "), certificateDateTextField);
         alert.getDialogPane().setContent(grid);
         List<Employee> allEmployees = EmployeeDao.getAllEmployeesList(session);
@@ -622,15 +633,15 @@ public class GUI extends Application {
         alert.getDialogPane().setPrefWidth(500);
         alert.setTitle("Repair car");
         alert.setHeaderText(null);
-        ComboBox<Car> carChoiceBox = new ComboBox<>();
+        ComboBox<Car> carComboBox = new ComboBox<>();
         ComboBox<Part> partsComboBox = new ComboBox<>();
-        carChoiceBox.setPrefWidth(200);
-        carChoiceBox.setVisibleRowCount(10);
+        carComboBox.setPrefWidth(200);
+        carComboBox.setVisibleRowCount(10);
         partsComboBox.setPrefWidth(200);
         partsComboBox.setVisibleRowCount(10);
         List<Car> allCars = CarDao.getAllCarsList(session);
-        carChoiceBox.getItems().addAll(allCars);
-        carChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        carComboBox.getItems().addAll(allCars);
+        carComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 partsComboBox.getItems().clear();
                 List<Part> partsForSelectedCar = PartDao.getPartsForCar(session, newValue.getId());
@@ -639,11 +650,11 @@ public class GUI extends Application {
         });
         GridPane grid = new GridPane();
         grid.addRow(0, new Text("Select car"), new Text("     "), new Text("Select part"));
-        grid.addRow(1, carChoiceBox, new Text("     "), partsComboBox);
+        grid.addRow(1, carComboBox, new Text("     "), partsComboBox);
         alert.getDialogPane().setContent(grid);
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
-                Car selectedCar = carChoiceBox.getValue();
+                Car selectedCar = carComboBox.getValue();
                 Part selectedPart = partsComboBox.getValue();
                 if (selectedCar != null && selectedPart != null) {
                     selectedPart.setCount(selectedPart.getCount() - 1);
@@ -680,7 +691,7 @@ public class GUI extends Application {
             }
         });
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Select car"), new Text("     "), new Text("Name"), new Text("     "), new Text("Price"), new Text("     "), new Text("Count"));
+        grid.addRow(0, new Text("Select car"), new Text("     "), new Text("Name:"), new Text("     "), new Text("Price:"), new Text("     "), new Text("Count:"));
         grid.addRow(1, carComboBox, new Text("     "), nameTextField, new Text("     "), priceTextField, new Text("     "), countTextField);
         alert.getDialogPane().setContent(grid);
         alert.showAndWait().ifPresent(result -> {
@@ -767,7 +778,7 @@ public class GUI extends Application {
             }
         });
         GridPane grid = new GridPane();
-        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("New position"), new Text("     "), new Text("New salary"), new Text("     "), new Text("Transfer reason"), new Text("     "), new Text("Order date (like 2001-01-01)"));
+        grid.addRow(0, new Text("Select employee"), new Text("     "), new Text("New position:"), new Text("     "), new Text("New salary:"), new Text("     "), new Text("Transfer reason:"), new Text("     "), new Text("Order date (like 2001-01-01):"));
         grid.addRow(1, employeeComboBox, new Text("     "), newPositionTextField, new Text("     "), newSalaryTextField, new Text("     "), transferReasonTextField, new Text("     "), orderDateTextField);
         alert.getDialogPane().setContent(grid);
         alert.showAndWait().ifPresent(result -> {
